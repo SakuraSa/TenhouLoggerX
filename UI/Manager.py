@@ -37,10 +37,9 @@ def mapping(mapping_path):
 
 
 def create_app():
-    __import__('UI.Page')
-    __import__('UI.Module')
-    from core.models_init import init
-    init()
+    __import__('Pages')
+    # from core.models_init import init
+    # init()
     from core.configs import ROOT_PATH
     return tornado.web.Application(
         handlers=[

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block html_head %}
+<!--[if lt IE 10]>
+<script src="/static/js/ie-low-version-warning.js"></script>
+<![endif]-->
+{% end %}
+{% block header %}
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand"><i class="fa fa-trophy"></i> TenhouLogger</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Upload</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/login" title="Sign in"><i class="fa fa-sign-in fa-lg"></i> Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% end %}
+{% block body %}
+<div class="container">
+
+  <div class="row">
+    <div style="text-align: center;margin: 100px auto 10px;">
+      <i class="fa fa-trophy" style="font-size: 280px;"></i>
+    </div>
+  </div>
+
+  <div class="row">
+    <form action="/" class="form col-md-4 col-md-offset-4" style="text-align: center;">
+      <div class="input-group">
+        <input name="name" type="text" class="form-control" placeholder="player name...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit"><i class="fa fa-search"></i> </button>
+        </span>
+      </div><!-- /input-group -->
+    </form>
+  </div>
+
+</div>
+{% end %}
+{% block footer %}
+<div class="navbar-fixed-bottom" style="background: #2C3E50;font-size: 14px;text-align: center;color: #B4AFB4;padding-top: 22px;padding-bottom: 22px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <span>@<a href="https://github.com/sakurasa" target="_blank">Sakurasa</a></span>
+        <span>Powered by <a href="https://github.com/tornadoweb/tornado" target="_blank">Tornado</a></span> |
+        <span><a href="https://bootswatch.com/flatly/" target="_blank">Bootswatch</a></span> |
+        <span><a href="http://coding.net/" target="_blank">Coding</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+{% end %}
