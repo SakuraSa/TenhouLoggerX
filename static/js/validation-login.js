@@ -31,13 +31,14 @@ $(function () {
 
     validate(inputUsername, function() {
         var username = inputUsername.val();
-        $.get('/api/get_username_availability?username=' + username, function (data, status) {
-            if(!data['availability']) {
-                set_success(inputUsername);
-            }else {
-                set_error(inputUsername);
-            }
-        });
+        if(username)
+            $.get('/api/get_username_availability?username=' + username, function (data, status) {
+                if(!data['availability']) {
+                    set_success(inputUsername);
+                }else {
+                    set_error(inputUsername);
+                }
+            });
     });
 
     validate(inputPassword, function() {

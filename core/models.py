@@ -35,10 +35,12 @@ class User(Base):
                  role_id=0,
                  header_url=None):
         self.name = name
-        self.pwd = User.password_hash(pwd)
+        self.pwd = None
         self.register_time = datetime.datetime.now()
         self.role_id = role_id
         self.header_url = header_url
+
+        self.set_password(pwd)
 
     def __repr__(self):
         return "<%s[%s]: %s>" % (type(self).__name__, self.id, self.name)
@@ -47,7 +49,7 @@ class User(Base):
         return User.password_hash(password) == self.pwd
 
     def set_password(self, password):
-        self.pwd = hashlib.sha256(self.name + password)
+        self.pwd = hashlib.sha256(self.name + password).hexdigest()
 
 
 class Role(Base):
