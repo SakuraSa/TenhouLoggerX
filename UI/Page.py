@@ -7,10 +7,13 @@ UI.Page
 
 __author__ = 'Rnd495'
 
+import sys
 import traceback
 
 import tornado.web
 import tornado.gen
+from tornado import httputil
+from tornado.log import gen_log
 
 import core.models
 from core.configs import Configs
@@ -90,15 +93,18 @@ class PageBase(tornado.web.RequestHandler):
         if not isinstance(e, Interruption):
             return tornado.web.RequestHandler._handle_request_exception(self, e)
 
-        import sys
-        from tornado import httputil
-        from tornado.log import gen_log
-
+        # copy of tornado.web.RequestHandler._handle_request_exception
+        # but remove exception report
         if isinstance(e, tornado.web.Finish):
             # Not an error; just finish the request without logging.
             if not self._finished:
                 self.finish()
             return
+
+        # this is not an error
+        # do not report exception
+        # self.log_exception(*sys.exc_info())
+
         if self._finished:
             # Extra errors after the request has been finished should
             # be logged, but there is no reason to continue to try and
