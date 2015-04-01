@@ -13,15 +13,9 @@ import tornado.web
 import tornado.gen
 
 import core.models
-from core import verification
-from core import tasks
-from core.models import User, GameLog
 from core.configs import Configs
-from core.celeryIOLoop import CeleryIOLoop
-from UI.Manager import mapping
 
 configs = Configs.instance()
-celery = CeleryIOLoop()
 
 
 class Interruption(Exception):
