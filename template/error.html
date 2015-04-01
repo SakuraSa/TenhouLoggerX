@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Error{% end %}
+{% block body %}
+<div class="container" style="text-align: center;margin: 100px auto">
+  <div class="jumbotron">
+    <h1>HTTP {{ status_code }}</h1>
+    <p>Sorry, server can not handle your request right now.</p>
+    <p>An exception occurred while processing.</p>
+    {% if message %}
+      <pre class="text-danger">{{ message }}</pre>
+    {% end %}
+    <p>
+      <a class="btn btn-lg btn-primary" href="javascript:window.history.back();" role="button">back</a>
+    </p>
+  </div>
+</div>
+{% end %}
