@@ -14,6 +14,7 @@ import tornado.gen
 
 import core.models
 from core.configs import Configs
+from core.models import User
 
 configs = Configs.instance()
 
