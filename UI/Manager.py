@@ -2,7 +2,7 @@
 # coding = utf-8
 
 """
-Manager
+UI.Manager
 """
 
 import os
