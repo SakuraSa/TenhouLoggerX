@@ -50,5 +50,6 @@ def create_app():
         gzip=configs.gzip,
         template_path=os.path.join(ROOT_PATH, "template"),
         static_path=os.path.join(ROOT_PATH, "static"),
-        cookie_secret=configs.cookie_secret
+        cookie_secret=configs.cookie_secret,
+        xsrf_cookies=configs.xsrf_cookies
     )

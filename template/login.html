@@ -9,6 +9,8 @@
 <div class="container" style="text-align: center;margin: 100px auto">
   <form class="form-login" role="form" action="/login" method="post" onsubmit="this.password.value=hex_sha256(this.username.value + this.password.value);">
     <h1 class="form-login-heading">Login</h1>
+    <input type="hidden" name="next" value="{{ next }}">
+    {% raw xsrf_form_html() %}
     <div class="form-group has-feedback">
       <label class="control-label" for="input-username">Username:</label>
       <input type="text" name="username" id="input-username" maxlength="20" class="form-control" placeholder="username" required autofocus>

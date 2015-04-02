@@ -19,7 +19,7 @@ class LoginPage(PageBase):
     LoginPage
     """
     def get(self):
-        self.render('login.html')
+        self.render('login.html', next=self.get_argument('next', '/'))
 
     def post(self):
         username = self.get_argument('username')
