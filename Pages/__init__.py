@@ -9,4 +9,5 @@ __author__ = 'Rnd495'
 
 import homePage
 import loginPage
+import logoutPage
 import APIPage

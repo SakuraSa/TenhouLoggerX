@@ -58,7 +58,6 @@ class PageBase(tornado.web.RequestHandler):
     """
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
-        self._current_user = None
 
     @property
     def db(self):

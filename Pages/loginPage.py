@@ -12,6 +12,7 @@ from UI.Manager import mapping
 from UI.Page import PageBase
 from core.models import get_new_session, User
 
+
 @mapping(r'/login')
 class LoginPage(PageBase):
     """
