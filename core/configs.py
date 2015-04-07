@@ -9,7 +9,7 @@ __author__ = 'Rnd495'
 __all__ = ['Configs', 'ConfigsError']
 
 import os
-
+import json
 
 # check "config/now.conf"
 # if not exists, create by copying "config/default.conf" to "config/now.conf"
@@ -53,17 +53,15 @@ class Configs(object):
                     raise ConfigsError('ConfigsError: config line syntax error with "%s"' % line)
                 name = line[:separator_index].strip()
                 value = line[separator_index + 1:].strip()
+                # accept upper case
+                if value.lower() in ('true', 'false'):
+                    value = value.lower()
                 # param type parse
-                if value.startswith('"') and value.endswith('"') and len(value) >= 2:
-                    value = value[1:len(value) - 1].replace("\\\"", "\"")
-                    self.__dict__[name] = value
-                elif value in ["True", "true", "False", "false"]:
-                    if value in ["True", "true"]:
-                        self.__dict__[name] = True
-                    else:
-                        self.__dict__[name] = False
-                else:
-                    self.__dict__[name] = int(value)
+                try:
+                    data = json.loads(value)
+                    self.__dict__[name] = data
+                except ValueError:
+                    raise ConfigsError('ConfigsError: unknown data format "%s"' % value)
         for name in CONFIG_NOTNULL:
             if not self.__dict__.get(name, None):
                 raise ConfigsError('ConfigsError: property "%s" is not set' % name)
