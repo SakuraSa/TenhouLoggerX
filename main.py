@@ -18,5 +18,5 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = create_app()
     app.listen(options.port, options.ip)
-    print "starting service on %s:%s" % (options.ip, options.port)
+    print "starting service on http://%s:%s" % (options.ip, options.port)
     tornado.ioloop.IOLoop.instance().start()

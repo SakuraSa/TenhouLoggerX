@@ -26,7 +26,7 @@ def on_navbar(title=None, priority=0):
         _init_register_list.append((target, title, priority))
         return target
     # for on args use: @on_navbar
-    if issubclass(title, tornado.web.RequestHandler):
+    if isinstance(title, type) and issubclass(title, tornado.web.RequestHandler):
         # set default title as page class name
         default_target = title
         title = default_target.__name__

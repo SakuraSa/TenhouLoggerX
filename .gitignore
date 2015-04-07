@@ -48,3 +48,6 @@ docs/_build/
 
 # tmp conf
 config/now.conf
+
+# website running datas
+josn/
