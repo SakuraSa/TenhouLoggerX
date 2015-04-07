@@ -2,7 +2,7 @@
 # coding = utf-8
 
 """
-Page.logoutPage
+Pages.logoutPage
 """
 
 __author__ = 'Rnd495'

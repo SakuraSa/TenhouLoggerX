@@ -2,7 +2,7 @@
 # coding = utf-8
 
 """
-Page.APIPage
+Pages.APIPage
 """
 
 __author__ = 'Rnd495'

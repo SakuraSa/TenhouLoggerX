@@ -2,7 +2,7 @@
 # coding = utf-8
 
 """
-Page.homePage
+Pages.homePage
 """
 
 __author__ = 'Rnd495'
