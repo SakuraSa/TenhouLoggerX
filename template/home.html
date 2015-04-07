@@ -5,34 +5,7 @@
 <![endif]-->
 {% end %}
 {% block header %}
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/" class="navbar-brand"><i class="fa fa-trophy"></i> TenhouLogger</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Upload</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        {% if current_user %}
-        <li><a href="/" title="{{ current_user.name }}"><i class="fa fa-user fa-lg"></i> {{ current_user.name }}</a></li>
-        <li><a href="/logout" title="Sign out"><i class="fa fa-sign-out fa-lg"></i> Sign out</a></li>
-        {% else %}
-        <li><a href="/login" title="Sign in"><i class="fa fa-sign-in fa-lg"></i> Sign in</a></li>
-        {% end %}
-      </ul>
-    </div>
-  </div>
-</div>
+{% module navbar() %}
 {% end %}
 {% block body %}
 <div class="container">
@@ -53,7 +26,6 @@
       </div><!-- /input-group -->
     </form>
   </div>
-
 </div>
 {% end %}
 {% block footer %}

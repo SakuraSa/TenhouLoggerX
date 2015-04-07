@@ -26,10 +26,12 @@ def mapping(mapping_path):
         if issubclass(target, tornado.web.RequestHandler):
             if mapping_path in page_dict:
                 raise KeyError("KeyError: page '%s' is already registered." % mapping_path)
+            setattr(target, '__url__', mapping_path)
             return page_dict.setdefault(mapping_path, target)
         elif issubclass(target, tornado.web.UIModule):
             if mapping_path in module_dict:
                 raise KeyError("KeyError: module '%s' is already registered." % mapping_path)
+            setattr(target, '__url__', mapping_path)
             return module_dict.setdefault(mapping_path, target)
         else:
             raise TypeError("TypeError: unknown type '%s' registered." % repr(target))
@@ -37,7 +39,8 @@ def mapping(mapping_path):
 
 
 def create_app():
-    __import__('Pages')
+    __import__('UI.module')
+    __import__('pages')
     from core.models_init import init
     init()
     from core.configs import ROOT_PATH
