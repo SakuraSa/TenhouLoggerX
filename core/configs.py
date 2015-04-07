@@ -63,7 +63,7 @@ class Configs(object):
                 except ValueError:
                     raise ConfigsError('ConfigsError: unknown data format "%s"' % value)
         for name in CONFIG_NOTNULL:
-            if not self.__dict__.get(name, None):
+            if self.__dict__.get(name, None) is None:
                 raise ConfigsError('ConfigsError: property "%s" is not set' % name)
 
     @staticmethod
