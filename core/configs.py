@@ -67,9 +67,9 @@ class Configs(object):
                 raise ConfigsError('ConfigsError: property "%s" is not set' % name)
 
     @staticmethod
-    def instance():
+    def instance(config_file_name=None):
         if not hasattr(Configs, "_instance"):
-            Configs._instance = Configs(CONFIG_PATH_NOW)
+            Configs._instance = Configs(config_file_name or CONFIG_PATH_NOW)
         return Configs._instance
 
 if __name__ == '__main__':
