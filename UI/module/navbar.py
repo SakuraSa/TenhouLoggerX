@@ -35,7 +35,7 @@ def on_navbar(title=None, priority=0):
     return wrapper
 
 
-def _get_enum_list():
+def _get_enum_list(pretend=None):
     global _init_register_list, navbar_list
     # check if navbar_dict should update
     if _init_register_list or navbar_list is None:
@@ -47,7 +47,7 @@ def _get_enum_list():
                 # missing "__url__" attr
                 raise ValueError('ValueError: "%s" does not has attr "__url__", it seems unregistered.')
             else:
-                url = target.__url__
+                url = pretend if pretend else target.__url__
 
             navbar_list.append((target, url, title, priority))
         # sort by priority
@@ -61,5 +61,5 @@ class Navbar(tornado.web.UIModule):
     """
     Navbar
     """
-    def render(self):
-        return self.render_string(r'UI/navbar.html', enum_list=_get_enum_list())
+    def render(self, pretend=None):
+        return self.render_string(r'UI/navbar.html', enum_list=_get_enum_list(pretend=pretend))

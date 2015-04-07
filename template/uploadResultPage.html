@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block html_head %}
+<!--[if lt IE 10]>
+<script src="/static/js/ie-low-version-warning.js"></script>
+<![endif]-->
+{% end %}
+{% block header %}
+{% module navbar() %}
+{% end %}
+{% block body %}
+<div class="container" style="margin: 60px auto 64px">
+  <div class="row" style="text-align: center;margin: 80px auto 10px;">
+    <h1>Upload Tenhou Game Logs</h1>
+  </div>
+  <div class="row">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr><td>No.</td><td>Ref</td><td>Status</td></tr>
+      </thead>
+      <tbody>
+        {% for index, command in enumerate(commands) %}
+          <tr id="command-tr-{{ index }}">
+            <td>{{ index + 1 }}</td>
+            {% if command.uploaded %}
+              <td><a href="#">{{ command.ref }}</a></td>
+              <td><i class="fa fa-success"></i> uploaded</td>
+            {% else %}
+              <td><a>{{ command.ref }}</a></td>
+              <td><i></i>waiting</td>
+            {% end %}
+          </tr>
+        {% end %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% end %}
