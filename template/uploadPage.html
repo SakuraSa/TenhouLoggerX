@@ -11,11 +11,11 @@
       <small>multi logs can be uploaded at once</small>
     </div>
     <div class="row">
-      <textarea class="form-control" rows="13" title="Logs texts" name="logs" placeholder="Past Tenhou log diary text..." required="required"></textarea>
+      <textarea id="ta-logs" class="form-control" rows="13" title="Logs texts" name="logs" placeholder="Past Tenhou log diary text..." required="required"></textarea>
     </div>
     <div class="row" style="text-align: center;margin: 10px auto 10px;">
       <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
-      <button type="button" class="btn"><i class="fa fa-remove"></i> Clear</button>
+      <button type="button" class="btn" onclick="$('#ta-logs').val('');$('#ta-logs').focus();"><i class="fa fa-remove"></i> Clear</button>
       <button type="button" class="btn"><i class="fa fa-question"></i> Help</button>
     </div>
   </form>

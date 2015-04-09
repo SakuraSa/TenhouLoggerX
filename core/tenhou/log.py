@@ -22,11 +22,12 @@ class Log(object):
     Log
     """
     def __init__(self, ref):
-        self.json = json.load(os.path.join(configs.tenhou_log_dir, '%s.json' % ref))
+        with open(Log.get_file_name(ref), 'rb') as file_handle:
+            self.json = json.load(file_handle)
 
     @staticmethod
     def check_exists(ref):
-        return os.path.exists(os.path.join(configs.tenhou_log_dir, '%s.json' % ref))
+        return os.path.exists(Log.get_file_name(ref))
 
     @staticmethod
     def download(ref):
@@ -35,6 +36,10 @@ class Log(object):
             'Host': 'tenhou.net',
             'Reference': url
         }
-        with open(os.path.join(configs.tenhou_log_dir, '%s.ref' % ref)) as file_handle:
+        with open(Log.get_file_name(ref), 'wb') as file_handle:
             file_handle.write(requests.get(url, headers=headers).text)
         return Log(ref)
+
+    @staticmethod
+    def get_file_name(ref):
+        return os.path.join(configs.tenhou_log_dir, '%s.json' % ref)

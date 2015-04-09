@@ -18,9 +18,9 @@
             <td>{{ index + 1 }}</td>
             {% if command.uploaded %}
               <td><a href="#">{{ command.ref }}</a></td>
-              <td><i class="fa fa-success"></i> uploaded</td>
+              <td class="success"><i class="fa fa-check"></i> uploaded</td>
             {% else %}
-              <td><a>{{ command.ref }}</a></td>
+              <td>{{ command.ref }}</td>
               <td><i></i>waiting</td>
             {% end %}
           </tr>
@@ -28,5 +28,11 @@
       </tbody>
     </table>
   </div>
+  <div class="row" style="text-align: center;margin: 10px auto 10px;">
+    <a type="submit" href="/upload" class="btn btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+  </div>
 </div>
+{% end %}
+{% block html_tail %}
+<script src="/static/js/multi-upload.js"></script>
 {% end %}
