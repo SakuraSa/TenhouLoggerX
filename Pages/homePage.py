@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = utf-8
+# coding=utf-8
 
 """
 Pages.homePage
@@ -13,7 +13,7 @@ from UI.Page import PageBase
 from UI.module.navbar import on_navbar
 
 
-@on_navbar(title='Home', priority=0)
+@on_navbar(title=u'主页', priority=0)
 @mapping(r'/')
 class HomePage(PageBase):
     """

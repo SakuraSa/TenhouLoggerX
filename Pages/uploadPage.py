@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = utf-8
+# coding=utf-8
 
 """
 Pages.uploadPage
@@ -18,7 +18,7 @@ from core.tenhou.log import Log
 TENHOU_REG = re.compile("log=(?P<ref>\d{10}gm-\w{4}-\d{4,5}-\w{8})(&tw=(?P<index>\d))?")
 
 
-@on_navbar(title='Upload', priority=1)
+@on_navbar(title=u'上传', priority=1)
 @mapping(r'/upload')
 class UploadPage(PageBase):
     """

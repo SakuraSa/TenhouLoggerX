@@ -12,13 +12,13 @@ $(function () {
     var set_success = function(inputObj) {
         var parent = inputObj.parent();
         parent.addClass("has-success");
-        parent.append($("span").attr("class", "glyphicon glyphicon-ok form-control-feedback"));
+        parent.append($(parent).find("span").attr("class", "glyphicon glyphicon-ok form-control-feedback"));
     };
 
     var set_error = function(inputObj) {
         var parent = inputObj.parent();
         parent.addClass("has-error");
-        parent.append($("span").attr("class", "glyphicon glyphicon-remove form-control-feedback"));
+        parent.append($(parent).find("span").attr("class", "glyphicon glyphicon-remove form-control-feedback"));
     };
 
     var validate = function(inputObj, func) {

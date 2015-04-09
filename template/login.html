@@ -3,29 +3,29 @@
 <link href="/static/css/login.css" rel="stylesheet">
 {% end %}
 {% block title %}Login{% end %}
-{% block header %}
-{% end %}
 {% block body %}
 <div class="container" style="text-align: center;margin: 100px auto">
   <form class="form-login" role="form" action="/login" method="post" onsubmit="this.password.value=hex_sha256(this.username.value + this.password.value);">
-    <h1 class="form-login-heading">Login</h1>
+    <h1 class="form-login-heading">登入</h1>
     <input type="hidden" name="next" value="{{ next }}">
     {% raw xsrf_form_html() %}
     <div class="form-group has-feedback">
-      <label class="control-label" for="input-username">Username:</label>
+      <label class="control-label" for="input-username">昵称:</label>
       <input type="text" name="username" id="input-username" maxlength="20" class="form-control" placeholder="username" required autofocus>
+      <span></span>
     </div>
     <div class="form-group has-feedback">
-      <label class="control-label" for="input-password">Password:</label>
+      <label class="control-label" for="input-password">密码:</label>
       <input type="password" name="password" id="input-password" class="form-control" placeholder="password" required>
+      <span></span>
     </div>
     <div class="checkbox">
       <label>
-        <input type="checkbox" value="remember-me" name="remember-me" checked> remember-me
+        <input type="checkbox" value="remember-me" name="remember-me" checked> 记住我
       </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">
-      Login
+      登入
     </button>
   </form>
 </div>

@@ -7,16 +7,16 @@
   <form action="/upload" method="post">
     {% raw xsrf_form_html() %}
     <div class="row" style="text-align: center;margin: 80px auto 10px;">
-      <h1>Upload Tenhou Game Logs</h1>
-      <small>multi logs can be uploaded at once</small>
+      <h1>上传游戏记录</h1>
+      <small>可以一次上传多个记录</small>
     </div>
     <div class="row">
-      <textarea id="ta-logs" class="form-control" rows="13" title="Logs texts" name="logs" placeholder="Past Tenhou log diary text..." required="required"></textarea>
+      <textarea id="ta-logs" class="form-control" rows="13" title="Logs texts" name="logs" placeholder="粘贴您的天凤对战日志..." required="required"></textarea>
     </div>
     <div class="row" style="text-align: center;margin: 10px auto 10px;">
-      <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
-      <button type="button" class="btn" onclick="$('#ta-logs').val('');$('#ta-logs').focus();"><i class="fa fa-remove"></i> Clear</button>
-      <button type="button" class="btn"><i class="fa fa-question"></i> Help</button>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> 上传</button>
+      <button type="button" class="btn" onclick="$('#ta-logs').val('');$('#ta-logs').focus();"><i class="fa fa-remove"></i> 清除</button>
+      <button type="button" class="btn"><i class="fa fa-question"></i> 帮助</button>
     </div>
   </form>
 </div>
