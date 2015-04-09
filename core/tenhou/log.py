@@ -25,6 +25,14 @@ class Log(object):
         with open(Log.get_file_name(ref), 'rb') as file_handle:
             self.json = json.load(file_handle)
 
+    @property
+    def names(self):
+        return self.json['name']
+
+    @property
+    def ref(self):
+        return self.json['ref']
+
     @staticmethod
     def check_exists(ref):
         return os.path.exists(Log.get_file_name(ref))
@@ -43,3 +51,10 @@ class Log(object):
     @staticmethod
     def get_file_name(ref):
         return os.path.join(configs.tenhou_log_dir, '%s.json' % ref)
+
+    @staticmethod
+    def iter_all():
+        for root, dirs, files in os.walk(configs.tenhou_log_dir):
+            for file_name in files:
+                ref = os.path.splitext(file_name)[0]
+                yield Log(ref)

@@ -9,7 +9,7 @@ __author__ = 'Rnd495'
 
 import tornado.web
 
-from UI.Manager import mapping, page_dict
+from UI.Manager import mapping
 
 
 _init_register_list = []

@@ -1,0 +1,22 @@
+<table class="{{ table_class }}">
+  <thead>
+  <tr>
+    <td><strong>No.</strong></td>
+    {% for title in titles %}
+      <td><strong>{{ title }}</strong></td>
+    {% end %}
+  </tr>
+  </thead>
+  <tbody>
+  {% for index, item in enumerate(iterator[offset:offset + limit]) %}
+  <tr>
+    <td>{{ index + offset + 1 }}</td>
+    {% block page %}
+      {% for value in extractor(item) %}
+      <td>{{ value }}</td>
+      {% end %}
+    {% end %}
+  </tr>
+  {% end %}
+  </tbody>
+</table>

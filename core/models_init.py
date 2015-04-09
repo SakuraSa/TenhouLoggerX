@@ -7,8 +7,12 @@ core.models_init
 
 __author__ = 'Rnd495'
 
+import os
+import datetime
+
 import models
-from configs import Configs
+from core.tenhou.log import Log
+from core.configs import Configs
 
 configs = Configs.instance()
 
@@ -52,4 +56,10 @@ def init():
     session.add(admin_user)
     session.commit()
 
+    # create init PlayerLog
+    for log in Log.iter_all():
+        ref = log.ref
+        time = datetime.datetime.strptime(ref[:10], '%Y%m%d%H')
+        for name in log.names:
+            session.add(models.PlayerLog(name=name, ref=ref, time=time))
     session.commit()

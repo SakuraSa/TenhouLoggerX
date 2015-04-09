@@ -51,3 +51,6 @@ config/now.conf
 
 # website running datas
 josn/
+
+# temp database file
+db.sqlite

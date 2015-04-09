@@ -8,3 +8,4 @@ __init__.py
 __author__ = 'Rnd495'
 
 import navbar
+import playerLogTable

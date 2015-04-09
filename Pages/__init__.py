@@ -11,4 +11,5 @@ import homePage
 import loginPage
 import logoutPage
 import uploadPage
+import playerLogListPage
 import APIPage

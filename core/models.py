@@ -67,6 +67,22 @@ class Role(Base):
         return "<%s[%s]: %s>" % (type(self).__name__, self.id, self.name)
 
 
+class PlayerLog(Base):
+    __tablename__ = 'T_PlayerLog'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(length=32), nullable=False, index=Index('PlayerLog_index_name'))
+    ref = Column(String(length=64), nullable=False, index=Index('PlayerLog_index_ref'))
+    time = Column(DateTime, nullable=False, index=Index('PlayerLog_index_time'))
+
+    def __init__(self, name, ref, time):
+        self.name = name
+        self.ref = ref
+        self.time = time
+
+    def __repr__(self):
+        return "<%s[%s]: %s-%s>" % (type(self).__name__, self.id, self.name, self.ref)
+
 _engine = None
 _session_maker = None
 _session = None
