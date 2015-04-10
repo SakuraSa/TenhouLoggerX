@@ -8,7 +8,7 @@ $(function() {
         ref = td_list[1].textContent;
         status = td_list[2].innerText;
 
-        if(status != "uploaded") {
+        if (td_list[2].className != "success") {
             td_list[2].innerHTML = '<i class="fa fa-refresh fa-spin"></i> 上传中...';
             td_list[2].className = "";
             $.get("/api/upload_ref?ref=" + ref, function(data, status) {
