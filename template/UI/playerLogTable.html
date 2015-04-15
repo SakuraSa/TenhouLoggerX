@@ -1,0 +1,27 @@
+{% extends "table.html" %}
+{% block page %}
+<td>
+  {{ item.rankings[item.get_player_index(name)] + 1 }}
+</td>
+<td>
+  {{ item.points[item.get_player_index(name)] + 1 }}
+</td>
+<td>
+  {{ item.pts[item.get_player_index(name)] + 1 }}
+</td>
+<td>
+  {{ item.rates[item.get_player_index(name)] + 1 }}
+</td>
+{% for player in item.names %}
+<td>
+  {% if player == name %}
+  <a href="/player/log/list?name={{ player }}">{{ player }}</a>
+  {% else %}
+  <a class="text-muted" href="/player/log/list?name={{ player }}">{{ player }}</a>
+  {% end %}
+</td>
+{% end %}
+<td>
+  {{ item.time.strftime(u'%Y/%m/%d %H') }}
+</td>
+{% end %}

@@ -10,13 +10,10 @@ __author__ = 'Rnd495'
 import tornado.web
 
 from UI.Manager import mapping
+from core.tenhou.log import Log
 
 
-titles = [u'索引', u'玩家', u'时间']
-
-
-def extractor(item):
-    return item.ref, item.name, item.time.strftime(u'%Y/%m/%d %H')
+titles = [u'顺位', u'得点', u'PT', u'R值', u'东起', u'南起', u'西起', u'北起', u'时间']
 
 
 @mapping(r'player_log_table')
@@ -25,9 +22,10 @@ class PlayerLogTable(tornado.web.UIModule):
     PlayerLogTable
     """
 
-    def render(self, table):
+    def render(self, table, name):
+        table.items = [Log(item.ref) for item in table.items]
         return self.render_string(
-            r'UI/table.html',
+            r'UI/playerLogTable.html',
             table=table,
-            titles=titles,
-            extractor=extractor)
+            name=name,
+            titles=titles)

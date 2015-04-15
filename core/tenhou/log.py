@@ -9,6 +9,7 @@ __author__ = 'Rnd495'
 
 import os
 import json
+import datetime
 
 import requests
 
@@ -25,9 +26,47 @@ class Log(object):
         with open(Log.get_file_name(ref), 'rb') as file_handle:
             self.json = json.load(file_handle)
 
+        # cache
+        self._scores = None
+        self._rankings = None
+
+    @property
+    def ref(self):
+        return self.json['ref']
+
     @property
     def names(self):
         return self.json['name']
+
+    @property
+    def scores(self):
+        if not self._scores:
+            g = iter(self.json['sc'])
+            self._scores = zip(g, g)
+        return self._scores
+
+    @property
+    def time(self):
+        return datetime.datetime.strptime(self.ref[:10], '%Y%m%d%H')
+
+    @property
+    def points(self):
+        return [p[0] for p in self.scores]
+
+    @property
+    def pts(self):
+        return [p[1] for p in self.scores]
+
+    @property
+    def rankings(self):
+        if not self._rankings:
+            index_sorted = sorted((-s, i) for i, s in enumerate(self.points))
+            self._rankings = [i for _, i in index_sorted]
+        return self._rankings
+
+    @property
+    def rates(self):
+        return self.json['rate']
 
     @property
     def ref(self):
@@ -58,3 +97,6 @@ class Log(object):
             for file_name in files:
                 ref = os.path.splitext(file_name)[0]
                 yield Log(ref)
+
+    def get_player_index(self, name):
+        return self.names.index(name)

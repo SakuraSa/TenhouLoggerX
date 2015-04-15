@@ -8,9 +8,9 @@
   </tr>
   </thead>
   <tbody>
-  {% for index, item in table.index_and_items %}
+  {% for index, item in enumerate(table.items) %}
   <tr>
-    <td>{{ index }}</td>
+    <td>{{ index + 1 + table.item_index_from }}</td>
     {% block page %}
       {% for value in extractor(item) %}
       <td>{{ value }}</td>

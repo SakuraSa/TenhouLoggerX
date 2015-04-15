@@ -25,4 +25,4 @@ class PlayerLogListPage(TablePage):
         iterator = session.query(PlayerLog).filter(PlayerLog.name == name).order_by(desc(PlayerLog.time))
         session.close()
         table = self.get_table_argument(iterator, table_name='table')
-        self.render('log/list.html', table=table)
+        self.render('log/list.html', table=table, name=name)

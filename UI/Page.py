@@ -173,10 +173,7 @@ class TableInfo(object):
         self.page_count = self.item_count / self.page_size + bool(self.item_count % self.page_size)
         self.item_index_from = self.page_size * self.page_index
         self.item_index_to = min(self.item_count - 1, self.item_index_from + self.page_size)
-        self.index_and_items = [
-            (i + self.item_index_from + 1, item)
-            for i, item in enumerate(self.iterator[self.item_index_from:self.item_index_to])
-        ]
+        self.items = self.iterator[self.item_index_from:self.item_index_to]
 
     def iter_page_index(self):
         if self.page_index < self.page_nav_size / 2:
