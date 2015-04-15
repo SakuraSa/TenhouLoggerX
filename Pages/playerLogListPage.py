@@ -11,11 +11,11 @@ from sqlalchemy import desc
 
 from core.models import get_new_session, PlayerLog
 from UI.Manager import mapping
-from UI.Page import PageBase
+from UI.Page import TablePage
 
 
 @mapping(r'/player/log/list')
-class PlayerLogListPage(PageBase):
+class PlayerLogListPage(TablePage):
     """
     PlayerLogListPage
     """
@@ -24,13 +24,5 @@ class PlayerLogListPage(PageBase):
         session = get_new_session()
         iterator = session.query(PlayerLog).filter(PlayerLog.name == name).order_by(desc(PlayerLog.time))
         session.close()
-        page_size = int(self.get_argument('page_size', default=1000))
-        page_offset = int(self.get_argument('page_offset', default=0))
-        page_count = iterator.count()
-        offset = page_size * page_offset
-        limit = page_size
-        self.render(
-            'log/list.html',
-            iterator=iterator,
-            offset=offset, limit=limit,
-            page_size=page_size, page_offset=page_offset, page_count=page_count)
+        table = self.get_table_argument(iterator, table_name='table')
+        self.render('log/list.html', table=table)

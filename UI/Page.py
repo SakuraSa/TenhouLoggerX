@@ -12,6 +12,7 @@ import traceback
 
 import tornado.web
 import tornado.gen
+import tornado.escape
 from tornado import httputil
 from tornado.log import gen_log
 
@@ -120,3 +121,69 @@ class PageBase(tornado.web.RequestHandler):
 
     def get_referer(self):
         return self.request.headers.get('referer', None)
+
+
+class TablePage(PageBase):
+    """
+    TablePage
+    """
+
+    def get_table_argument(self, iterator, table_name="table"):
+        page_size = int(self.get_argument(table_name + "_page_size", 10))
+        page_index = int(self.get_argument(table_name + "_page_index", 0))
+        return TableInfo(iterator, page_size=page_size, page_index=page_index, table_name=table_name)
+
+    def get_path_with_change_query(self, **kwargs):
+        path = self.request.path
+        query_args = []
+        query_dict = dict(self.request.query_arguments.iteritems())
+        for key, value in kwargs.iteritems():
+            query_dict[key] = value
+        for key, value in query_dict.iteritems():
+            if not isinstance(value, list):
+                value = [value]
+            value = [
+                tornado.escape.url_escape(i.encode('utf-8'))
+                if isinstance(i, unicode) else tornado.escape.url_escape(str(i))
+                for i in value
+            ]
+            query_args.append("%s=%s" % (key, ",".join(value)))
+        query_string = "&".join(query_args)
+        if isinstance(query_string, unicode):
+            query_string.encode('utf-8')
+        return path + "?" + query_string
+
+    def turn(self, page_index, table_name):
+        kwargs = {table_name + '_page_index': page_index}
+        return self.get_path_with_change_query(**kwargs)
+
+
+class TableInfo(object):
+    """
+    TableInfo
+    """
+
+    def __init__(self, iterator, page_size=10, page_index=0, page_nav_size=10, table_name='table'):
+        self.iterator = iterator
+        self.page_size = page_size
+        self.page_index = page_index
+        self.page_nav_size = page_nav_size
+        self.table_name = table_name
+        self.item_count = self.iterator.count()
+        self.page_count = self.item_count / self.page_size + bool(self.item_count % self.page_size)
+        self.item_index_from = self.page_size * self.page_index
+        self.item_index_to = min(self.item_count - 1, self.item_index_from + self.page_size)
+        self.index_and_items = [
+            (i + self.item_index_from + 1, item)
+            for i, item in enumerate(self.iterator[self.item_index_from:self.item_index_to])
+        ]
+
+    def iter_page_index(self):
+        if self.page_index < self.page_nav_size / 2:
+            start = max(0, self.page_index - self.page_nav_size / 2)
+            end = min(self.page_count, start + self.page_nav_size)
+        else:
+            end = min(self.page_count, self.page_index + self.page_nav_size / 2)
+            start = max(0, end - self.page_nav_size)
+
+        return range(start, end)

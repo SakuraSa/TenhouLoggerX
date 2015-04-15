@@ -25,12 +25,9 @@ class PlayerLogTable(tornado.web.UIModule):
     PlayerLogTable
     """
 
-    def render(self, iterator, offset=0, limit=10, table_class='table'):
+    def render(self, table):
         return self.render_string(
             r'UI/table.html',
-            iterator=iterator,
+            table=table,
             titles=titles,
-            extractor=extractor,
-            offset=offset,
-            limit=limit,
-            table_class=table_class)
+            extractor=extractor)

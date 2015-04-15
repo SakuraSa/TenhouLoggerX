@@ -2,12 +2,12 @@
 {% block body %}
 <div class="container" style="margin: 60px auto 64px">
 
-  <div class="row">
+  <div class="row" style="text-align: center;">
     <h1>对战记录列表</h1>
   </div>
 
-  <div class="row">
-    {% module player_log_table(iterator, offset, limit) %}
+  <div class="row" style="text-align: center;">
+    {% module player_log_table(table) %}
   </div>
 
 </div>
