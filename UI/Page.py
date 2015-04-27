@@ -113,11 +113,10 @@ class PageBase(tornado.web.RequestHandler):
         if isinstance(e, tornado.web.HTTPError):
             if e.status_code not in tornado.httputil.responses and not e.reason:
                 gen_log.error("Bad HTTP status code: %d", e.status_code)
-                self.send_error(500, exc_info=sys.exc_info())
             else:
                 self.send_error(e.status_code, exc_info=sys.exc_info())
-        else:
-            self.send_error(500, exc_info=sys.exc_info())
+                return
+        self.send_error(500, exc_info=sys.exc_info())
 
     def get_referer(self):
         return self.request.headers.get('referer', None)

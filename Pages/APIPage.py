@@ -50,13 +50,13 @@ class APIUploadRef(PageBase):
                 'Referer': url}
             response = yield tornado.gen.Task(client.fetch, url, headers=headers, request_timeout=20)
             if not response:
-                self.write({'ok': True, 'status': 'connection error'})
+                self.write({'ok': True, 'status': 'connection error', 'already': 'false'})
             if response.body.strip() == 'INVALID PATH':
-                self.write({'ok': True, 'status': 'illegal ref'})
+                self.write({'ok': True, 'status': 'illegal ref', 'already': 'false'})
             else:
                 with open(Log.get_file_name(ref), 'wb') as file_handle:
                     file_handle.write(response.body)
-                self.write({'ok': True, 'status': 'ok'})
+                self.write({'ok': True, 'status': 'ok', 'already': 'false'})
         else:
-            self.write({'ok': True, 'status': 'ok'})
+            self.write({'ok': True, 'status': 'ok', 'already': 'true'})
         self.finish()

@@ -17,8 +17,17 @@ from sqlalchemy.orm import sessionmaker
 
 from configs import Configs
 
+
+class _Base(object):
+    """
+    Base
+    """
+
+    def __repr__(self):
+        return "<%s>" % type(self).__name__
+
 configs = Configs.instance()
-Base = declarative_base()
+Base = declarative_base(cls=_Base)
 
 
 class User(Base):
@@ -43,7 +52,7 @@ class User(Base):
         self.set_password(pwd)
 
     def __repr__(self):
-        return "<%s[%s]: %s>" % (type(self).__name__, self.id, self.name)
+        return "<User[%s]: %s>" % (self.id, self.name)
 
     def get_is_same_password(self, password):
         return User.password_hash(password) == self.pwd
@@ -64,7 +73,7 @@ class Role(Base):
             self.id = id
 
     def __repr__(self):
-        return "<%s[%s]: %s>" % (type(self).__name__, self.id, self.name)
+        return "<Role[%s]: %s>" % (self.id, self.name)
 
 
 class PlayerLog(Base):
