@@ -24,4 +24,7 @@
 <td>
   {{ item.time.strftime(u'%Y/%m/%d %H') }}
 </td>
+<td>
+  <a href="{% raw item.get_tenhou_link(player) %}">详情</a>
+</td>
 {% end %}

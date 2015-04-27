@@ -10,6 +10,7 @@ __author__ = 'Rnd495'
 import os
 import json
 import datetime
+import urllib
 
 import requests
 
@@ -68,10 +69,6 @@ class Log(object):
     def rates(self):
         return self.json['rate']
 
-    @property
-    def ref(self):
-        return self.json['ref']
-
     @staticmethod
     def check_exists(ref):
         return os.path.exists(Log.get_file_name(ref))
@@ -99,4 +96,21 @@ class Log(object):
                 yield Log(ref)
 
     def get_player_index(self, name):
-        return self.names.index(name)
+        try:
+            return self.names.index(name)
+        except ValueError:
+            return None
+
+    def get_tenhou_link(self, tw_name=None):
+        base = "/watch/log?"
+        params = {'ref': self.ref}
+        for i, name in enumerate(self.names):
+            if isinstance(name, unicode):
+                name = name.encode("utf-8")
+            params['UN%d' % i] = name
+        tw = None
+        if tw_name:
+            tw = self.get_player_index(tw_name)
+        if tw is not None:
+            params['tw'] = tw
+        return base + urllib.urlencode(params)

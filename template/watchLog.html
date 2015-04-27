@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container" style="margin: 60px auto 64px">
+
+  <div class="row">
+    <div style="text-align: center;margin: 10px auto 10px;">
+      <iframe src="{% raw tenhou_url %}" style="width:100%;" scrolling="no" marginwidth="0" marginheight="0"
+              frameborder="0"></iframe>
+    </div>
+  </div>
+
+</div>
+{% end %}
+{% block html_tail %}
+<script>
+  $(function () {
+    var set_iframe_height = function () {
+      var iframe = $('iframe');
+      var height = document.documentElement.clientHeight - 144;
+      if (height < (iframe.width() / 4.8 * 3.2))
+        height = iframe.width() / 4.8 * 3.2;
+      iframe.height(height);
+    };
+    $(window).resize(set_iframe_height);
+    set_iframe_height();
+  })
+</script>
+{% end %}

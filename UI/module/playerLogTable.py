@@ -13,7 +13,7 @@ from UI.Manager import mapping
 from core.tenhou.log import Log
 
 
-titles = [u'顺位', u'得点', u'PT', u'R值', u'东起', u'南起', u'西起', u'北起', u'时间']
+titles = [u'顺位', u'得点', u'PT', u'R值', u'东起', u'南起', u'西起', u'北起', u'时间', u'操作']
 
 
 @mapping(r'player_log_table')

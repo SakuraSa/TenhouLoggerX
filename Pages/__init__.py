@@ -7,9 +7,10 @@ __init__.py
 
 __author__ = 'Rnd495'
 
-import homePage
-import loginPage
-import logoutPage
-import uploadPage
-import playerLogListPage
-import APIPage
+import os
+
+
+# import all *Page.py
+for root, dirs, files in os.walk(os.path.split(__file__)[0]):
+    for py in (name for name in files if name.endswith("Page.py")):
+        __import__('Pages.' + py[:-3])
