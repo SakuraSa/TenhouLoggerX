@@ -7,7 +7,6 @@ core.models_init
 
 __author__ = 'Rnd495'
 
-import os
 import datetime
 
 import models

@@ -11,7 +11,7 @@ import datetime
 
 import hashlib
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, Float, String, DateTime, Text, Index
+from sqlalchemy import Column, Integer, String, DateTime, Index
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 

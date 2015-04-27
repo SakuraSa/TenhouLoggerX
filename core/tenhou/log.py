@@ -12,8 +12,6 @@ import json
 import datetime
 import urllib
 
-import requests
-
 from core.configs import Configs
 
 configs = Configs.instance()

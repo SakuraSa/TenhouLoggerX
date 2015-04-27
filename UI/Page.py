@@ -67,10 +67,9 @@ class PageBase(tornado.web.RequestHandler):
     def get_current_user(self):
         user_id = self.get_secure_cookie("user_id", None)
         if user_id:
-            self._current_user = self.db.query(User).filter(User.id == user_id).first()
+            return self.db.query(User).filter(User.id == user_id).first()
         else:
-            self._current_user = None
-        return self._current_user
+            return None
 
     def get_login_url(self):
         return '/login'
