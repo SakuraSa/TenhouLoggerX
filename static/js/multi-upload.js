@@ -13,7 +13,7 @@ $(function() {
             td_list[2].className = "";
             $.get("/api/upload_ref?ref=" + ref, function(data, status) {
                if(data.ok && data.status == 'ok') {
-                   td_list[1].innerHTML = '<a href="/' + ref + '">' + ref + '</a>';
+                   td_list[1].innerHTML = '<a href="/watch/log?ref=' + ref + '">' + ref + '</a>';
                    td_list[2].innerHTML = '<i class="fa fa-check"></i> 已上传';
                    td_list[2].className = "success";
                }else {

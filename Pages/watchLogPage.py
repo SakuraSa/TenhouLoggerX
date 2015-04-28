@@ -48,7 +48,7 @@ class WatchLogPage(PageBase):
                 break
         try:
             params['tw'] = int(self.get_argument("tw", None))
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
         # encode unicode to utf-8

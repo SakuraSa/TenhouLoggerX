@@ -17,7 +17,7 @@
           <tr id="command-tr-{{ index }}">
             <td>{{ index + 1 }}</td>
             {% if command.uploaded %}
-              <td><a href="#">{{ command.ref }}</a></td>
+            <td><a href="/watch/log?ref={{ command.ref }}">{{ command.ref }}</a></td>
               <td class="success"><i class="fa fa-check"></i> 已上传</td>
             {% else %}
               <td>{{ command.ref }}</td>
