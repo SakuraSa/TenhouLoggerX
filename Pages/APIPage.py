@@ -31,6 +31,28 @@ class APIGetUsernameAvailability(PageBase):
         self.write({'ok': True, 'availability': availability})
 
 
+@tornado.gen.coroutine
+def get_ref_status(ref, user_agent='python-requests/2.5.1 CPython/2.7.6 Windows/7'):
+    uploaded = Log.check_exists(ref)
+    if not uploaded:
+        client = tornado.httpclient.AsyncHTTPClient()
+        url = 'http://tenhou.net/5/mjlog2json.cgi?%s' % ref
+        headers = {
+            'User-Agent': user_agent,
+            'Host': 'tenhou.net',
+            'Referer': url}
+        response = yield client.fetch(url, headers=headers, request_timeout=20)
+        if not response:
+            raise tornado.gen.Return({'ok': True, 'status': 'connection error', 'already': 'false'})
+        elif response.body.strip() == 'INVALID PATH':
+            raise tornado.gen.Return({'ok': True, 'status': 'illegal ref', 'already': 'false'})
+        else:
+            with open(Log.get_file_name(ref), 'wb') as file_handle:
+                file_handle.write(response.body)
+            raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'false'})
+    else:
+        raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'true'})
+
 @mapping(r'/api/upload_ref')
 class APIUploadRef(PageBase):
     """
@@ -40,23 +62,6 @@ class APIUploadRef(PageBase):
     @tornado.gen.engine
     def get(self):
         ref = self.get_argument("ref")
-        uploaded = Log.check_exists(ref)
-        if not uploaded:
-            client = tornado.httpclient.AsyncHTTPClient()
-            url = 'http://tenhou.net/5/mjlog2json.cgi?%s' % ref
-            headers = {
-                'User-Agent': self.request.headers.get('User-Agent', 'python-requests/2.5.1 CPython/2.7.6 Windows/7'),
-                'Host': 'tenhou.net',
-                'Referer': url}
-            response = yield tornado.gen.Task(client.fetch, url, headers=headers, request_timeout=20)
-            if not response:
-                self.write({'ok': True, 'status': 'connection error', 'already': 'false'})
-            if response.body.strip() == 'INVALID PATH':
-                self.write({'ok': True, 'status': 'illegal ref', 'already': 'false'})
-            else:
-                with open(Log.get_file_name(ref), 'wb') as file_handle:
-                    file_handle.write(response.body)
-                self.write({'ok': True, 'status': 'ok', 'already': 'false'})
-        else:
-            self.write({'ok': True, 'status': 'ok', 'already': 'true'})
+        status = yield get_ref_status(ref)
+        self.write(status)
         self.finish()
