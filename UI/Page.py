@@ -43,7 +43,7 @@ class NoticeAndRedirectInterruption(Interruption):
         self.message = message
         self.title = title
         self.countdown = countdown
-        self.redirect_to = redirect_to if redirect_to is not None else '/'
+        self.redirect_to = redirect_to if redirect_to is not None else '$BACK$'
 
     def render(self, page):
         page.render('noticeAndRedirect.html',
@@ -81,12 +81,12 @@ class PageBase(tornado.web.RequestHandler):
         error_type, error_instance, trace = kwargs.pop('exc_info')
         if issubclass(error_type, Interruption):
             error_instance.render(self)
-            return
-        if configs.show_error_details:
-            message = traceback.format_exc()
         else:
-            message = None
-        self.render('error.html', status_code=status_code, message=message)
+            if configs.show_error_details:
+                message = traceback.format_exc()
+            else:
+                message = None
+            self.render('error.html', status_code=status_code, message=message)
 
     def _handle_request_exception(self, e):
         if not isinstance(e, Interruption):

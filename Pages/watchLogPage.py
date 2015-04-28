@@ -7,10 +7,13 @@ watchLogPage
 
 __author__ = 'Rnd495'
 
+import re
 import urllib
 
 from UI.Manager import mapping
-from UI.Page import PageBase
+from UI.Page import PageBase, NoticeAndRedirectInterruption
+
+TENHOU_REG = re.compile(r"^(?P<ref>\d{10}gm-\w{4}-\d{4,5}-\w{8})$")
 
 
 @mapping(r'/watch/log')
@@ -20,7 +23,10 @@ class WatchLogPage(PageBase):
     """
 
     def get(self):
-        ref = self.get_argument("ref")
+        ref = self.get_argument("ref", None)
+        if ref is None or not TENHOU_REG.match(ref):
+            raise NoticeAndRedirectInterruption(u'无效的索引值"%s"' % ref, title=u'参数错误')
+
         params = {'log': ref}
         for i in range(4):
             key = "UN%d" % i
@@ -42,3 +48,4 @@ class WatchLogPage(PageBase):
 
         tenhou_url = 'http://tenhou.net/5/?' + urllib.urlencode(params)
         self.render('watchLog.html', tenhou_url=tenhou_url)
+        self.finish()

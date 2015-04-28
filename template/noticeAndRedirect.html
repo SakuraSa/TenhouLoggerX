@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container" style="margin: 60px auto 64px">
+  <div class="jumbotron">
+    <h1>{{ title }}</h1>
+    {% if message %}
+    <pre>{{ message }}</pre>
+    {% end %}
+    <p>
+      <a id="btn_ok" class="btn btn-lg btn-primary" href="javascript:jump();" role="button">确认</a>
+    </p>
+  </div>
+</div>
+{% end %}
+{% block html_tail %}
+<script>
+  var jump = function () {
+    var target = "{{ redirect_to }}";
+    if (target == "$BACK$")
+      window.history.back();
+    else
+      window.location = target;
+  };
+  $(function () {
+    var btn = $('#btn_ok');
+    var btn_text = btn.html();
+    var countdown = {
+    {
+      countdown
+    }
+  };
+  var countdown_backcall = function () {
+    if (countdown >= 0) {
+      btn.html(btn_text + " " + countdown + "s");
+      countdown -= 1;
+      setTimeout(countdown_backcall, 1000);
+    } else {
+      jump();
+    }
+  };
+  countdown_backcall();
+  })
+  ;
+</script>
+{% end %}
