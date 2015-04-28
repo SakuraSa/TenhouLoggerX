@@ -8,7 +8,14 @@
     <p>对不起，服务器无法处理您的请求。</p>
     <p>服务器遇到了一个错误。</p>
     {% if message %}
-      <pre class="text-danger">{{ message }}</pre>
+    <p class="text-warning">注意：如果这不是测试环境，请关闭配置文件中的 <code>show_error_details = true</code></p>
+    <pre class="text-danger" style="text-align: left">{{ message }}</pre>
+    {% else %}
+    <p>服务器关闭了错误栈的显示</p>
+
+    <p>如果需要进行显示，请设置配置文件中的 <code>show_error_details = true</code></p>
+
+    <p class="text-warning">注意：请不要在测试环境之外的地方打开此选项。</p>
     {% end %}
     <p>
       <a class="btn btn-lg btn-primary" href="javascript:window.history.back();" role="button">back</a>
