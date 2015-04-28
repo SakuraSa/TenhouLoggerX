@@ -53,6 +53,7 @@ def get_ref_status(ref, user_agent='python-requests/2.5.1 CPython/2.7.6 Windows/
     else:
         raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'true'})
 
+
 @mapping(r'/api/upload_ref')
 class APIUploadRef(PageBase):
     """
