@@ -98,7 +98,7 @@ class Cache(Base):
     __tablename__ = 'T_Cache'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    key = Column(String(length=64), nullable=False, index=Index('Cache_index_key'))
+    key = Column(String(length=64), nullable=False, unique=True, index=Index('Cache_index_key'))
     time = Column(DateTime, nullable=False, index=Index('Cache_index_time'))
     data = Column(Text, nullable=False)
 
@@ -130,7 +130,7 @@ class Cache(Base):
         cache = session.query(Cache).filter(Cache.key == key).first()
         session.close()
         if cache is not None:
-            if expire_time and cache.time + expire_time > datetime.datetime.now():
+            if expire_time and cache.time + expire_time <= datetime.datetime.now():
                 value = None
             else:
                 value = cache.json
