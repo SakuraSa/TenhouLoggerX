@@ -27,7 +27,7 @@ class WatchLogPage(PageBase):
     """
 
     @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self):
         ref = self.get_argument("ref", None)
         if ref is None or not TENHOU_REG.match(ref):
@@ -59,4 +59,3 @@ class WatchLogPage(PageBase):
 
         tenhou_url = 'http://tenhou.net/5/?' + urllib.urlencode(params)
         self.render('watchLog.html', tenhou_url=tenhou_url)
-        self.finish()

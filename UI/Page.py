@@ -11,7 +11,6 @@ import sys
 import traceback
 
 import tornado.web
-import tornado.gen
 import tornado.escape
 from tornado import httputil
 from tornado.log import gen_log
