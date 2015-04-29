@@ -8,8 +8,9 @@ core.models
 __author__ = 'Rnd495'
 
 import datetime
-
 import hashlib
+import json
+
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Index, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -100,6 +101,53 @@ class Cache(Base):
     key = Column(String(length=64), nullable=False, index=Index('Cache_index_key'))
     time = Column(DateTime, nullable=False, index=Index('Cache_index_time'))
     data = Column(Text, nullable=False)
+
+    def __init__(self, key, data):
+        self.key = key
+        self.data = None
+        self.time = datetime.datetime.now()
+        self.json = data
+
+    @property
+    def json(self):
+        return json.loads(self.data)
+
+    @json.setter
+    def json(self, value):
+        self.data = json.dumps(value)
+
+    @staticmethod
+    def get(key, expire_time=None):
+        """
+        return value from cache
+        when key is not found in cache, return None
+        when expire_time is set and created time + expire time > now, return None
+        :param key: cache key
+        :param expire_time: expire time
+        :return: cache value
+        """
+        session = get_new_session()
+        cache = session.query(Cache).filter(Cache.key == key).first()
+        session.close()
+        if cache is not None:
+            if expire_time and cache.time + expire_time > datetime.datetime.now():
+                value = None
+            else:
+                value = cache.json
+        else:
+            value = None
+        return value
+
+    @staticmethod
+    def set(key, value):
+        """
+        :param key: cache key
+        :param value: cache value
+        """
+        session = get_new_session()
+        session.add(Cache(key=key, data=value))
+        session.commit()
+        session.close()
 
 _engine = None
 _session_maker = None

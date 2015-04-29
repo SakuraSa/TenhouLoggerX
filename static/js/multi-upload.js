@@ -11,7 +11,7 @@ $(function() {
         if (td_list[2].className != "success") {
             td_list[2].innerHTML = '<i class="fa fa-refresh fa-spin"></i> 上传中...';
             td_list[2].className = "";
-            $.get("/api/upload_ref?ref=" + ref, function(data, status) {
+            $.get("/api/upload/ref?ref=" + ref, function (data, status) {
                if(data.ok && data.status == 'ok') {
                    td_list[1].innerHTML = '<a href="/watch/log?ref=' + ref + '">' + ref + '</a>';
                    td_list[2].innerHTML = '<i class="fa fa-check"></i> 已上传';
