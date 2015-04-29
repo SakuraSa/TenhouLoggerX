@@ -11,7 +11,7 @@ import datetime
 
 import hashlib
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, DateTime, Index
+from sqlalchemy import Column, Integer, String, DateTime, Index, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -91,6 +91,15 @@ class PlayerLog(Base):
 
     def __repr__(self):
         return "<%s[%s]: %s-%s>" % (type(self).__name__, self.id, self.name, self.ref)
+
+
+class Cache(Base):
+    __tablename__ = 'T_Cache'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key = Column(String(length=64), nullable=False, index=Index('Cache_index_key'))
+    time = Column(DateTime, nullable=False, index=Index('Cache_index_time'))
+    data = Column(Text, nullable=False)
 
 _engine = None
 _session_maker = None
