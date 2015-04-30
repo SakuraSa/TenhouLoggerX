@@ -22,9 +22,11 @@ from core.tenhou.log import Log
 from core.models import get_new_session, User, Cache
 
 
+ENCODING_REGEX = re.compile(r"<meta charset=\"(?P<encoding>.+?)\">")
 RECORDS_REGEX = re.compile(r"<div id=\"records\">(?P<records>[\S\s]*)</div>")
 REF_REGEX = re.compile(r'(\d{10}gm-\w{4}-\d{4,5}-\w{8})')
 PT_REGEX = re.compile(r'\(([\+-]\d+\.\d+)\)')
+CHANGE_REGEX = re.compile(r'<abbr title=\"(?P<pt_now>\d+)pt( (?P<pt_change>[\+-]\d+))?\">(?P<dan>\S+)</abbr>')
 
 
 @mapping(r'/api/get_username_availability')
@@ -91,11 +93,14 @@ def get_player_records(name, expire_time=datetime.timedelta(days=1)):
         query = {'name': name.encode('utf-8') if isinstance(name, unicode) else name}
         url = "http://www.arcturus.su/tenhou/ranking/ranking.pl?" + urllib.urlencode(query=query)
         try:
-            response = yield client.fetch(url, request_timeout=20)
+            response = yield client.fetch(url, request_timeout=30)
         except tornado.httpclient.HTTPError as error:
             raise tornado.gen.Return({'ok': False, 'error': str(error)})
         else:
-            text = RECORDS_REGEX.search(response.body).group('records')
+            body = response.body
+            match_encoding = ENCODING_REGEX.search(body)
+            encoding = match_encoding.group('encoding') if match_encoding else 'utf-8'
+            text = RECORDS_REGEX.search(response.body.decode(encoding)).group('records')
             if not text:
                 raise tornado.gen.Return({'ok': False, 'error': 'can not found records on page'})
             lines = (line.strip() for line in text.split("<br>") if line.strip())
@@ -106,17 +111,30 @@ def get_player_records(name, expire_time=datetime.timedelta(days=1)):
                 lobby = line[1].lstrip('L')
                 time_cost = int(line[2]) if line[2].isdigit() else None
                 play_time = datetime.datetime.strptime(' '.join(line[3:5]), '%Y-%m-%d %H:%M')
-                rule = line[5]
+                rule = line[5].rstrip(u'\uff0d\uff0d')
                 ref = None
                 if line[6] != '---':
-                    match = REF_REGEX.search(line[5])
+                    match = REF_REGEX.search(line[6])
                     if match:
                         ref = match.group(0)
+                pt_now = None
+                pt_change = None
+                dan = None
+                if line[7] != '---':
+                    match = CHANGE_REGEX.search(line[7])
+                    if match:
+                        pt_now = int(match.group('pt_now'))
+                        if match.group('pt_change'):
+                            pt_change = int(match.group('pt_change'))
+                        dan = match.group('dan')
                 result = line[8]
                 pts = PT_REGEX.findall(result)
-                names = [name.strip() for i, name in enumerate(PT_REGEX.split(result)) if i % 2 == 0]
+                names = [name.strip() for i, name in enumerate(PT_REGEX.split(result)) if i % 2 == 0 and name.strip()]
                 records.append({
                     'ranking': ranking,
+                    'pt_now': pt_now,
+                    'pt_change': pt_change,
+                    'dan': dan,
                     'lobby': lobby,
                     'time_cost': time_cost,
                     'play_time': play_time.isoformat(),
@@ -134,7 +152,6 @@ class APIGetRecords(PageBase):
     """
     APIGetRecords
     """
-
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self):

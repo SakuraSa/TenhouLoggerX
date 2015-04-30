@@ -166,7 +166,7 @@ class TableInfo(object):
         self.page_index = page_index
         self.page_nav_size = page_nav_size
         self.table_name = table_name
-        self.item_count = self.iterator.count()
+        self.item_count = len(self.iterator) if isinstance(self.iterator, list) else self.iterator.count()
         self.page_count = self.item_count / self.page_size + bool(self.item_count % self.page_size)
         self.item_index_from = self.page_size * self.page_index
         self.item_index_to = min(self.item_count - 1, self.item_index_from + self.page_size)

@@ -15,7 +15,7 @@ from UI.module.navbar import on_navbar
 from core.tenhou.log import Log
 
 
-TENHOU_REG = re.compile("log=(?P<ref>\d{10}gm-\w{4}-\d{4,5}-\w{8})(&tw=(?P<index>\d))?")
+TENHOU_REG = re.compile(r"log=(?P<ref>\d{10}gm-\w{4}-\d{4,5}-\w{8})(&tw=(?P<index>\d))?")
 
 
 @on_navbar(title=u'上传', priority=1)

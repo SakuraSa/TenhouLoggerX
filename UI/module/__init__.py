@@ -9,3 +9,4 @@ __author__ = 'Rnd495'
 
 import navbar
 import playerLogTable
+import playerRecordsTable

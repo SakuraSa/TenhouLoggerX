@@ -1,0 +1,59 @@
+{% extends "table.html" %}
+{% block page %}
+<td>{{ 'L' + item['lobby'] }}</td>
+<td>
+  {% if item['time_cost'] %}
+  <p>{{ item['time_cost'] }}m</p>
+  {% else %}
+  <p class="text-muted">无记录</p>
+  {% end %}
+</td>
+<td>{{ item['play_time'] }}</td>
+<td>{{ item['rule'] }}</td>
+<td>{{ item['ranking'] }}</td>
+<td>{{ item['dan'] }}</td>
+<td>
+  {% if item['pt_now'] %}
+  <p>{{ item['pt_now'] }}pt
+    {% if item['pt_change'] %}
+    {% if item['pt_change'] > 0 %}
+    <span class="text-success"><i class="fa fa-arrow-up"></i>{{ "+" + str(item['pt_change']) }}</span>
+    {% else %}
+    <span class="text-danger"><i class="fa fa-arrow-down"></i>{{ str(item['pt_change']) }}</span>
+    {% end %}
+    {% end %}
+  </p>
+  {% else %}
+  <p class="text-muted">无</p>
+  {% end %}
+</td>
+{% for player_index in range(4) %}
+<td>
+  <p>
+    {% if player_index < len(item['names']) %}
+    {% if item['names'][player_index] == name and item['lobby'] == '0000' %}
+    <a href="/player/log/list?name={{ item['names'][player_index] }}">{{ item['names'][player_index] }}</a>
+    {% if float(item['pts'][player_index]) >= 0 %}
+    <span class="text-success"><i class="fa fa-arrow-up"></i> {{ item['pts'][player_index] }}</span>
+    {% else %}
+    <span class="text-danger"><i class="fa fa-arrow-down"></i> {{ item['pts'][player_index] }}</span>
+    {% end %}
+    {% else %}
+    <a class="text-muted" href="/player/log/list?name={{ item['names'][player_index] }}">{{ item['names'][player_index]
+      }}</a>
+    <span class="text-muted">{{ item['pts'][player_index] }}</span>
+    {% end %}
+    {% else %}
+    <span class="text-muted">无</span>
+    {% end %}
+  </p>
+</td>
+{% end %}
+<td>
+  {% if item['ref'] %}
+  <a href="/watch/log?ref={{ item['ref'] }}">牌谱</a>
+  {% else %}
+  <p class="text-muted">无</p>
+  {% end %}
+</td>
+{% end %}
