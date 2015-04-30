@@ -34,9 +34,9 @@
     {% if item['names'][player_index] == name and item['lobby'] == '0000' %}
     <a href="/player/log/list?name={{ item['names'][player_index] }}">{{ item['names'][player_index] }}</a>
     {% if float(item['pts'][player_index]) >= 0 %}
-    <span class="text-success"><i class="fa fa-arrow-up"></i> {{ item['pts'][player_index] }}</span>
+    <span class="text-success">{{ item['pts'][player_index] }}</span>
     {% else %}
-    <span class="text-danger"><i class="fa fa-arrow-down"></i> {{ item['pts'][player_index] }}</span>
+    <span class="text-danger">{{ item['pts'][player_index] }}</span>
     {% end %}
     {% else %}
     <a class="text-muted" href="/player/log/list?name={{ item['names'][player_index] }}">{{ item['names'][player_index]

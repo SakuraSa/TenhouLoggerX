@@ -1,5 +1,5 @@
 {% if table.items %}
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" style="font-size: 12px;">
   <thead>
   <tr>
     <td><strong>No.</strong></td>
@@ -21,11 +21,20 @@
   {% end %}
   </tbody>
 </table>
-<p>
-  总计 <strong>{{ table.item_count }}</strong> 条记录 <strong>{{ table.page_index + 1 }}/{{ table.page_count }}</strong> 页
-</p>
-<nav>
-  <ul class="pagination">
+<nav style="font-size: 12px;">
+  <p>
+    总计 <strong>{{ table.item_count }}</strong> 条记录 <strong>{{ table.page_index + 1 }}/{{ table.page_count }}</strong> 页
+  </p>
+  <ul class="pagination" style="margin: 5px auto 20px;">
+    {% if table.page_index > 0 %}
+    <li>
+      <a href="{% raw handler.turn(0, table.table_name) %}" aria-label="First" title="First">
+        <span aria-hidden="true">&lt;&lt;</span>
+      </a>
+    </li>
+    {% else %}
+    <li class="disabled"><a aria-label="First" title="First"><span aria-hidden="true">&lt;&lt;</span></a></li>
+    {% end %}
     {% if table.page_index > 0 %}
     <li>
       <a href="{% raw handler.turn(table.page_index - 1, table.table_name) %}" aria-label="Previous" title="Previous">
@@ -33,7 +42,7 @@
       </a>
     </li>
     {% else %}
-    <li class="disabled"><a aria-label="Previous"><span aria-hidden="true">&lt;</span></a></li>
+    <li class="disabled"><a aria-label="Previous" title="Previous"><span aria-hidden="true">&lt;</span></a></li>
     {% end %}
     {% for index in table.iter_page_index() %}
     <li class="{{ 'active' if index == table.page_index else '' }}">
@@ -50,7 +59,16 @@
       </a>
     </li>
     {% else %}
-    <li class="disabled"><a aria-label="Next"><span aria-hidden="true">&gt;</span></a></li>
+    <li class="disabled"><a aria-label="Next" title="Next"><span aria-hidden="true">&gt;</span></a></li>
+    {% end %}
+    {% if table.page_index < table.page_count - 1 %}
+    <li>
+      <a href="{% raw handler.turn(table.page_count - 1, table.table_name) %}" aria-label="Last" title="Last">
+        <span aria-hidden="true">&gt;&gt;</span>
+      </a>
+    </li>
+    {% else %}
+    <li class="disabled"><a aria-label="Last" title="Last"><span aria-hidden="true">&gt;&gt;</span></a></li>
     {% end %}
   </ul>
 </nav>
