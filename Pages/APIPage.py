@@ -19,7 +19,7 @@ import tornado.httputil
 from UI.Manager import mapping
 from UI.Page import PageBase
 from core.tenhou.log import Log
-from core.models import get_new_session, User, Cache
+from core.models import get_new_session, User, PlayerLog, Cache
 
 
 ENCODING_REGEX = re.compile(r"<meta charset=\"(?P<encoding>.+?)\">")
@@ -63,6 +63,11 @@ def get_ref_status(ref, user_agent='python-requests/2.5.1 CPython/2.7.6 Windows/
         else:
             with open(Log.get_file_name(ref), 'wb') as file_handle:
                 file_handle.write(response.body)
+            session = get_new_session()
+            log = Log(ref=ref)
+            for name in log.names:
+                session.add(PlayerLog(name=name, ref=ref, time=log.time))
+            session.close()
             raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'false'})
     else:
         raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'true'})
