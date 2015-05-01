@@ -67,6 +67,7 @@ def get_ref_status(ref, user_agent='python-requests/2.5.1 CPython/2.7.6 Windows/
             log = Log(ref=ref)
             for name in log.names:
                 session.add(PlayerLog(name=name, ref=ref, time=log.time))
+            session.commit()
             session.close()
             raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'false'})
     else:
