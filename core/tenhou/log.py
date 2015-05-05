@@ -34,6 +34,14 @@ class Log(object):
         return self.json['ref']
 
     @property
+    def rule(self):
+        return self.json['rule']['disp']
+
+    @property
+    def dans(self):
+        return self.json['dan']
+
+    @property
     def names(self):
         return self.json['name']
 

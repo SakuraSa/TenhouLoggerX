@@ -13,6 +13,7 @@ import json
 import tornado.web
 
 from UI.Manager import mapping
+from core.tenhou.log import Log
 from core.configs import Configs
 
 
@@ -63,20 +64,53 @@ def high_charts_simple_lines(title, series, subtitle=None, x_axis=None):
 def high_charts_spline_records_pt(records, name, limit=100):
     dans = {}
     counter = 0
+    start_time = end_time = None
     for record in reversed(records):
-        counter += 1
-        if counter > limit:
-            break
         if record['lobby'] == '0000':
+            counter += 1
+            if counter > limit:
+                break
+            start_time = start_time or record['play_time']
+            end_time = record['play_time']
             key = record['rule'][0] + u"麻 " + record['dan']
             dans.setdefault(key, list()).append([record['play_time'], record['pt_now']])
     series = [{'name': key, 'data': value} for key, value in dans.iteritems()]
     options = {
         'chart': {'type': 'spline'},
         'title': {'text': name + u' 近%d盘PT曲线' % limit},
-        'subtitle': {'text': records[0]['play_time'] + ' - ' + records[-1]['play_time']},
+        'subtitle': {'text': start_time + ' - ' + end_time},
         'xAxis': {'type': 'datetime'},
         'yAxis': {'min': 0, 'title': {'text': 'PT'}},
+        'series': series
+    }
+    return options
+
+
+def high_charts_spline_r(iterator, name, limit=100):
+    dans = {}
+    counter = 0
+    start_time = end_time = None
+    for player_log in iterator:
+        ref = player_log.ref
+        lobby = ref.split('-')[2]
+        if lobby == '0000':
+            counter += 1
+            if counter > limit:
+                break
+            log = Log(ref=ref)
+            start_time = start_time or log.time
+            end_time = log.time
+            player_index = log.get_player_index(name)
+            key = u'三麻' if len(log.names) == 3 else u'四麻'
+            key += u" " + log.dans[player_index]
+            dans.setdefault(key, []).append([log.time.isoformat(), log.rates[player_index]])
+    series = [{'name': key, 'data': value} for key, value in dans.iteritems()]
+    options = {
+        'chart': {'type': 'spline'},
+        'title': {'text': name + u' 近%d盘R值曲线' % limit},
+        'subtitle': {'text': start_time.isoformat() + ' - ' + end_time.isoformat()},
+        'xAxis': {'type': 'datetime'},
+        'yAxis': {'title': {'text': 'R值'}},
         'series': series
     }
     return options
