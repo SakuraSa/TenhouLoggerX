@@ -12,6 +12,7 @@ import tornado.gen
 
 from UI.Manager import mapping
 from UI.Page import TablePage, NoticeAndRedirectInterruption
+from UI.module.highCharts import high_charts_spline_records_pt
 from Pages.APIPage import get_player_records
 
 
@@ -29,4 +30,5 @@ class PlayerRecordsListPage(TablePage):
         if not records['ok']:
             raise NoticeAndRedirectInterruption(u'获取列表时发生错误：' + records['error'], title='错误', countdown=60)
         table = self.get_table_argument(records['records'][::-1], table_name='table')
-        self.render('records/list.html', table=table, name=name)
+        options = high_charts_spline_records_pt(records=records['records'], name=name)
+        self.render('records/list.html', table=table, name=name, options=options)
