@@ -105,10 +105,13 @@ def high_charts_spline_r(iterator, name, limit=100):
             key += u" " + log.dans[player_index]
             dans.setdefault(key, []).append([log.time.isoformat(), log.rates[player_index]])
     series = [{'name': key, 'data': value} for key, value in dans.iteritems()]
+    time_text = 'None - None'
+    if start_time and end_time:
+        time_text = start_time.isoformat() + ' - ' + end_time.isoformat()
     options = {
         'chart': {'type': 'spline'},
         'title': {'text': name + u' 近%d盘R值曲线' % limit},
-        'subtitle': {'text': start_time.isoformat() + ' - ' + end_time.isoformat()},
+        'subtitle': {'text': time_text},
         'xAxis': {'type': 'datetime'},
         'yAxis': {'title': {'text': 'R值'}},
         'series': series
