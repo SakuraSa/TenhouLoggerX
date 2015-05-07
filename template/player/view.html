@@ -1,0 +1,52 @@
+{% extends "../base.html" %}
+{% block body %}
+<div class="container" style="margin: 60px auto 64px">
+
+  <div class="row" style="text-align: center;">
+    <h1>{{ name }}</h1>
+  </div>
+
+  <div class="row" style="text-align: center;">
+    <img src="http://cdn.v2ex.co/gravatar/bab6370235e5f01878b9c4bd58f04f28"
+         class="img-responsive img-circle" alt="Responsive image"
+         style="margin: 10px auto 20px;">
+
+    <p>
+      这个账号还没有人认领
+    </p>
+  </div>
+
+  <div class="row" style="text-align: center;">
+    <div class="col-md-4">
+      <p><i class="fa fa-pie-chart" style="font-size: 160px;"></i></p>
+      <h4><a href="">特征统计</a></h4>
+
+      <p>
+        <small>从玩家已经上传的牌谱中分析玩家特征</small>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p><i class="fa fa-line-chart" style="font-size: 160px;"></i></p>
+      <h4><a href="/player/log/list?name={{ name }}">已上传记录</a></h4>
+
+      <p>
+        <small>浏览玩家已经上传的牌谱记录</small>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p><i class="fa fa-area-chart" style="font-size: 160px;"></i></p>
+      <h4><a href="/player/record/list?name={{ name }}">全体记录</a></h4>
+
+      <p>
+        <small>浏览玩家进行过的所有牌局（无详细记录）</small>
+      </p>
+    </div>
+  </div>
+
+  <div class="row" style="text-align: center;">
+    <blockquote>
+      Tips: 在玩家的信息第一次被浏览时，网页可能因为初始化而卡顿。
+    </blockquote>
+  </div>
+</div>
+{% end %}

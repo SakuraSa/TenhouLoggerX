@@ -15,9 +15,9 @@
 {% for player in item.names %}
 <td>
   {% if player == name %}
-  <a href="/player/log/list?name={{ player }}">{{ player }}</a>
+  <a href="/player/view?name={{ player }}">{{ player }}</a>
   {% else %}
-  <a class="text-muted" href="/player/log/list?name={{ player }}">{{ player }}</a>
+  <a class="text-muted" href="/player/view?name={{ player }}">{{ player }}</a>
   {% end %}
 </td>
 {% end %}
