@@ -39,7 +39,8 @@
       jump();
     }
   };
-  countdown_backcall();
+  if (countdown >= 0)
+    countdown_backcall();
   })
   ;
 </script>

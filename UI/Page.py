@@ -119,6 +119,17 @@ class PageBase(tornado.web.RequestHandler):
     def get_referer(self):
         return self.request.headers.get('referer', None)
 
+    def get_int_argument(self, name, default=None):
+        text = tornado.web.RequestHandler.get_argument(self, name=name, default=default)
+        if text is None:
+            raise NoticeAndRedirectInterruption(u'缺少参数"%s"' % name, title=u'参数错误', countdown=-1)
+        try:
+            return int(text)
+        except ValueError:
+            raise NoticeAndRedirectInterruption(
+                u'参数"%s"为"%s"无法解析为int' % (name, text),
+                title=u'参数错误', countdown=-1)
+
 
 class TablePage(PageBase):
     """
@@ -126,8 +137,8 @@ class TablePage(PageBase):
     """
 
     def get_table_argument(self, iterator, table_name="table"):
-        page_size = int(self.get_argument(table_name + "_page_size", 10))
-        page_index = int(self.get_argument(table_name + "_page_index", 0))
+        page_size = self.get_int_argument(table_name + "_page_size", 10)
+        page_index = self.get_int_argument(table_name + "_page_index", 0)
         return TableInfo(iterator, page_size=page_size, page_index=page_index, table_name=table_name)
 
     def get_path_with_change_query(self, **kwargs):
