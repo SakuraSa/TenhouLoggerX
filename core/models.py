@@ -128,14 +128,17 @@ class Cache(Base):
         """
         session = get_new_session()
         cache = session.query(Cache).filter(Cache.key == key).first()
-        session.close()
+
         if cache is not None:
             if expire_time and cache.time + expire_time <= datetime.datetime.now():
+                session.delete(cache)
+                session.commit()
                 value = None
             else:
                 value = cache.json
         else:
             value = None
+        session.close()
         return value
 
     @staticmethod
