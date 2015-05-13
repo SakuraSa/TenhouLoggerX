@@ -67,8 +67,10 @@ class Log(object):
     @property
     def rankings(self):
         if not self._rankings:
-            index_sorted = sorted((-s, i) for i, s in enumerate(self.points))
-            self._rankings = [i for _, i in index_sorted]
+            point_sorted = sorted(((s, i) for i, s in enumerate(self.points)), reverse=True)
+            self._rankings = [None] * len(point_sorted)
+            for r, (_, i) in enumerate(point_sorted):
+                self._rankings[i] = r
         return self._rankings
 
     @property
