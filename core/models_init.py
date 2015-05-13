@@ -58,7 +58,10 @@ def init():
     # create init PlayerLog
     for log in Log.iter_all():
         ref = log.ref
-        time = datetime.datetime.strptime(ref[:10], '%Y%m%d%H')
+        parts = ref.split('-')
+        time = datetime.datetime.strptime(parts[0].rstrip('gm'), '%Y%m%d%H')
+        rule = parts[1]
+        lobby = parts[2]
         for name in log.names:
-            session.add(models.PlayerLog(name=name, ref=ref, time=time))
+            session.add(models.PlayerLog(name=name, ref=ref, time=time, lobby=lobby, rule=rule))
     session.commit()
