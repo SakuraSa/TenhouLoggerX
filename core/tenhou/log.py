@@ -219,7 +219,7 @@ class StatisticForSubLog(object):
         # attack
         point_change = sum(sc[player_index] for sc in self.point_changes)
         win = self.is_agari and point_change > 0
-        win_point = point_change if win else 0
+        win_point = point_change if win else None
         # speed
         first_richi = self.richi_list[player_index]
         if first_richi:
@@ -227,17 +227,27 @@ class StatisticForSubLog(object):
                 if richi is not None and richi[0] < first_richi[0]:
                     first_richi = False
                     break
+        first_richi = bool(first_richi)
         win_time = None
         if win:
             win_time = len(self.cards_ins[player_index])
         # int
-        dama = win and not self.is_fulu_list[player_index] and not self.richi_list[player_index]
-        ends_listening = self.result_description == u'全員聴牌'
-        if self.result_description == u'流局' and self.point_changes[player_index] > 0:
+        dama = None
+        if win:
+            dama = not self.is_fulu_list[player_index] and not self.richi_list[player_index]
+        ends_listening = None
+        if self.result_description == u'全員聴牌':
             ends_listening = True
+        elif self.result_description == u'流局':
+            ends_listening = point_change > 0
         # def
-        chong = self.result_description == u'和了' and self.point_changes[player_index] < 0
-        fulu_chong = chong and self.is_fulu_list[player_index]
+        someone_chong = self.result_description == u'和了' and \
+                        len(self.point_changes) == 1 and \
+                        sum(p < 0 for p in self.point_changes[0]) == 1
+        chong = someone_chong and point_change < 0
+        fulu_chong = None
+        if chong:
+            fulu_chong = self.is_fulu_list[player_index]
         # brave
         after_richi = not first_richi and bool(self.richi_list[player_index])
         fulu = self.is_fulu_list[player_index]
@@ -248,3 +258,81 @@ class StatisticForSubLog(object):
             chong=chong, fulu_chong=fulu_chong,
             after_richi=after_richi, fulu=fulu
         )
+
+
+def get_results(refs, player_name):
+    counter = {}
+    adder = {}
+    game_date_text_set = set()
+    for ref in refs:
+        log = Log(ref)
+        game_date_text_set.add(log.time.strftime("%Y%m%d"))
+        player_index = log.get_player_index(player_name)
+        if player_index < 0:
+            # should not be here
+            continue
+        for sub_log in log.sub_log:
+            statistics = StatisticForSubLog(sub_log)
+            results = statistics.get_result(player_index)
+            for key, value in results.iteritems():
+                if value is not None:
+                    counter[key] = counter.get(key, 0) + 1
+                    adder[key] = adder.get(key, 0) + value
+    results = {}
+    for key, value in counter.iteritems():
+        results[key] = (adder[key] / float(value)) if value else 0
+    max_line_days = now_line_days = 0
+    last_date = None
+    for date_text in sorted(game_date_text_set):
+        now_date = datetime.datetime.strptime(date_text, "%Y%m%d")
+        if last_date:
+            if int((now_date - last_date).days) <= 1:
+                now_line_days += 1
+                max_line_days = max(max_line_days, now_line_days)
+            else:
+                now_line_days = 1
+        last_date = now_date
+    results['max_line_days'] = max_line_days
+    results['now_line_days'] = now_line_days
+    return results
+
+
+if __name__ == '__main__':
+    import time
+    from sqlalchemy import func, desc
+    from core.models import get_new_session, PlayerLog
+
+    session = get_new_session()
+    counter = func.count(PlayerLog.name)
+    query = session.query(PlayerLog.name).filter((PlayerLog.lobby == '0000') & (PlayerLog.name != 'NoName')) \
+        .group_by(PlayerLog.name).having(counter > 100).order_by(desc(counter))
+    results = {}
+    for name in (row[0] for row in query):
+        start_time = time.time()
+        query = session.query(PlayerLog.ref).filter((PlayerLog.name == name) & (PlayerLog.lobby == '0000'))
+        refs = [row[0] for row in query]
+        results[name] = get_results(refs, name)
+        size = len(refs)
+        time_cost = time.time() - start_time
+        hz = size / time_cost
+        print '%6d' % size, '%.2fs' % time_cost, '%.2fHz' % hz, name
+    session.close()
+    data_lists = {}
+    for row in results.itervalues():
+        for key, value in row.iteritems():
+            data_lists.setdefault(key, []).append(value)
+
+    def format_data(d):
+        if d < 1:
+            return '%6s' % ('%.2f%%' % (d * 100))
+        elif abs(d) < 100:
+            return '%6s' % ('%.2f' % d)
+        else:
+            return '%6s' % ('%d' % d)
+
+    print ''
+    print '%20s' % 'type', '%6s' % 'avg', '%6s' % 'max', '%6s' % 'min', '%6s' % 'mse'
+    for key, data_list in data_lists.iteritems():
+        avg = sum(data_list) / float(len(data_list))
+        mse = sum((data - avg) ** 2 for data in data_list) ** 0.5
+        print '%20s' % key, format_data(avg), format_data(max(data_list)), format_data(min(data_list)), format_data(mse)
