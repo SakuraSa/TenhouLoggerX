@@ -42,6 +42,14 @@ class Log(object):
         return self.json['rule']['disp']
 
     @property
+    def lobby(self):
+        return self.ref.split('-')[2]
+
+    @property
+    def rule_code(self):
+        return self.ref.split('-')[1]
+
+    @property
     def dans(self):
         return self.json['dan']
 
