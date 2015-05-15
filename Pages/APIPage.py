@@ -37,7 +37,7 @@ class APIGetUsernameAvailability(PageBase):
     def get(self):
         username = self.get_argument("username")
         session = get_new_session()
-        availability = not bool(session.query(User).filter(User.name == username).count())
+        availability = session.query(User).filter(User.name == username).count() == 0
         session.close()
         self.write({'ok': True, 'availability': availability})
 
@@ -66,7 +66,12 @@ def get_ref_status(ref, user_agent='python-requests/2.5.1 CPython/2.7.6 Windows/
             session = get_new_session()
             log = Log(ref=ref)
             for name in log.names:
-                session.add(PlayerLog(name=name, ref=ref, time=log.time, lobby=log.lobby, rule=log.rule_code))
+                session.add(
+                    PlayerLog(
+                        name=name, ref=ref, time=log.time,
+                        lobby=log.lobby, rule=log.rule_code, size=log.size
+                    )
+                )
             session.commit()
             session.close()
             raise tornado.gen.Return({'ok': True, 'status': 'ok', 'already': 'false'})

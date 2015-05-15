@@ -86,13 +86,15 @@ class PlayerLog(Base):
     time = Column(DateTime, nullable=False, index=Index('PlayerLog_index_time'))
     lobby = Column(String(length=8), nullable=False, index=Index('PlayerLog_index_lobby'))
     rule = Column(String(length=4), nullable=False, index=Index('PlayerLog_index_rule'))
+    size = Column(Integer, nullable=False, index=Index('PlayerLog_index_size'))
 
-    def __init__(self, name, ref, time, lobby, rule):
+    def __init__(self, name, ref, time, lobby, rule, size):
         self.name = name
         self.ref = ref
         self.time = time
         self.lobby = lobby
         self.rule = rule
+        self.size = size
 
     def __repr__(self):
         return "<%s[%s]: %s-%s>" % (type(self).__name__, self.id, self.name, self.ref)

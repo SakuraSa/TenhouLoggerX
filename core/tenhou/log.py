@@ -30,6 +30,10 @@ class Log(object):
         self._rankings = None
 
     @property
+    def size(self):
+        return len(self.names)
+
+    @property
     def sub_log(self):
         return self.json['log']
 

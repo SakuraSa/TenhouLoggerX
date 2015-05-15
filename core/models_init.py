@@ -63,5 +63,5 @@ def init():
         rule = parts[1]
         lobby = parts[2]
         for name in log.names:
-            session.add(models.PlayerLog(name=name, ref=ref, time=time, lobby=lobby, rule=rule))
+            session.add(models.PlayerLog(name=name, ref=ref, time=time, lobby=lobby, rule=rule, size=log.size))
     session.commit()
