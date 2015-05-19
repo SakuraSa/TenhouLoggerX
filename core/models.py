@@ -154,7 +154,16 @@ class Cache(Base):
         :param value: cache value
         """
         session = get_new_session()
-        session.add(Cache(key=key, data=value))
+        cache = Cache(key=key, data=value)
+        query = session.query(Cache).filter(Cache.key == cache.key)
+        cache = query.first()
+        if cache is None:
+            cache = Cache(key=key, data=value)
+            session.add(cache)
+        else:
+            cache.key = key
+            cache.data = value
+            session.merge(cache)
         session.commit()
         session.close()
 
