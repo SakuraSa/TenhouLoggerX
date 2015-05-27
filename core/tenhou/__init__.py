@@ -8,4 +8,3 @@ __init__.py
 __author__ = 'Rnd495'
 
 import log
-import worker

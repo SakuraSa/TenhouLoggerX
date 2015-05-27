@@ -272,11 +272,35 @@ class StatisticForSubLog(object):
         )
 
 
-def get_results(refs, player_name):
+def get_results(ref_list, player_name):
+    """
+    do statistics on given refs for given player
+    result dict format (example value is avg value on data set 2015/05/15) :
+    {
+          fulu_chong : 0.3940,
+                dama : 0.1165,
+            win_time :  11.50,
+               chong : 0.1347,
+                 win : 0.2484,
+           win_point :   6690,
+      ends_listening : 0.5170,
+                fulu : 0.3717,
+         after_richi : 0.0288,
+       now_line_days :   3.71,
+       max_line_days :  16.67,
+         first_richi : 0.1597,
+               count :   1000,
+    }
+    :param ref_list: ref list
+    :param player_name: player name
+    :return: result dict
+    """
     counter = {}
     adder = {}
     game_date_text_set = set()
-    for ref in refs:
+    ref_counter = 0
+    for ref in ref_list:
+        ref_counter += 1
         log = Log(ref)
         game_date_text_set.add(log.time.strftime("%Y%m%d"))
         player_index = log.get_player_index(player_name)
@@ -306,6 +330,7 @@ def get_results(refs, player_name):
         last_date = now_date
     results['max_line_days'] = max_line_days
     results['now_line_days'] = now_line_days
+    results['count'] = ref_counter
     return results
 
 
@@ -317,7 +342,7 @@ if __name__ == '__main__':
     session = get_new_session()
     counter = func.count(PlayerLog.name)
     query = session.query(PlayerLog.name).filter((PlayerLog.lobby == '0000') & (PlayerLog.name != 'NoName')) \
-        .group_by(PlayerLog.name).having(counter > 100).order_by(desc(counter))
+        .group_by(PlayerLog.name).having(counter >= 50).order_by(desc(counter))
     results = {}
     for name in (row[0] for row in query):
         start_time = time.time()
@@ -343,8 +368,27 @@ if __name__ == '__main__':
             return '%6s' % ('%d' % d)
 
     print ''
-    print '%20s' % 'type', '%6s' % 'avg', '%6s' % 'max', '%6s' % 'min', '%6s' % 'mse'
+    print '%20s' % 'type', '%6s' % 'avg', '%6s' % 'max', '%6s' % 'min', '%6s' % 'mu'
+
+    # import numpy as np
+    from scipy.stats import norm
+    # import matplotlib.pyplot as plt
+
     for key, data_list in data_lists.iteritems():
         avg = sum(data_list) / float(len(data_list))
-        mse = sum((data - avg) ** 2 for data in data_list) ** 0.5
-        print '%20s' % key, format_data(avg), format_data(max(data_list)), format_data(min(data_list)), format_data(mse)
+        mu, std = norm.fit(data_list)
+        print '%20s' % key, format_data(avg), format_data(max(data_list)), format_data(min(data_list)), format_data(
+            mu), std
+        #
+        # # Plot the histogram.
+        # plt.hist(data_list, bins=25, normed=True, alpha=0.6, color='g')
+        #
+        # # Plot the PDF.
+        # xmin, xmax = plt.xlim()
+        # x = np.linspace(xmin, xmax, 100)
+        # p = norm.pdf(x, mu, std)
+        # plt.plot(x, p, 'k', linewidth=2)
+        # title = "%s fit results: mu = %.2f,  std = %.2f" % (key, mu, std)
+        # plt.title(title)
+        #
+        # plt.show()

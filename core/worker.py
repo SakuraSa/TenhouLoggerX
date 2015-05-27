@@ -22,10 +22,23 @@ class Worker(object):
         self._pool = Pool(processes=processes)
 
     def future(self, func, *args, **kwargs):
+        """
+        :rtype: gen.Future
+        """
         return gen.Task(self._pool.apply_async, func, args, kwargs)
 
     @staticmethod
     def instance():
+        """
+        :rtype: Worker
+        """
         if Worker._instance is None:
             Worker._instance = Worker()
         return Worker._instance
+
+
+def future(func, *args, **kwargs):
+    """
+    :rtype: gen.Future
+    """
+    return Worker.instance().future(func, *args, **kwargs)

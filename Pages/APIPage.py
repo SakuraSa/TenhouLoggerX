@@ -18,7 +18,8 @@ import tornado.httputil
 
 from UI.Manager import mapping
 from UI.Page import PageBase
-from core.tenhou.log import Log
+from core.tenhou.log import Log, get_results
+from core.worker import future
 from core.models import get_new_session, User, PlayerLog, Cache
 
 
@@ -111,7 +112,8 @@ def get_player_records(name, expire_time=datetime.timedelta(days=1)):
             body = response.body
             match_encoding = ENCODING_REGEX.search(body)
             encoding = match_encoding.group('encoding') if match_encoding else 'utf-8'
-            text = RECORDS_REGEX.search(response.body.decode(encoding)).group('records')
+            records_match = RECORDS_REGEX.search(response.body.decode(encoding))
+            text = records_match.group('records') if records_match else None
             if not text:
                 raise tornado.gen.Return({'ok': False, 'error': 'can not found records on page'})
             lines = (line.strip() for line in text.split("<br>") if line.strip())
@@ -172,3 +174,32 @@ class APIGetRecords(PageBase):
             self.write(records)
         else:
             self.write({'ok': False, 'status': "Missing param 'name'"})
+
+
+@tornado.gen.coroutine
+def get_player_statistics(player_name, lobby='0000', limit=300, game_size=4, min_count=30):
+    result_dict = {}
+
+    # query refs
+    session = get_new_session()
+    query = session.query(PlayerLog.ref) \
+        .filter((PlayerLog.name == player_name) & (PlayerLog.lobby == lobby) & (PlayerLog.size == game_size)) \
+        .order_by(PlayerLog.time)
+    # when ref count < min_count, return error
+    total_count = query.count()
+    if total_count < min_count:
+        # write status and error info
+        result_dict['ok'] = False
+        result_dict['error'] = u'至少需要上传%d盘记录才能进行统计（已上传%d盘）' % (min_count, total_count)
+        session.close()
+        raise tornado.gen.Return(result_dict)
+    refs = [row[0] for row in query[:limit]]
+    session.close()
+
+    # create statistics
+    statistic_result = yield future(get_results, ref_list=refs, player_name=player_name)
+
+    # write status
+    result_dict['ok'] = True
+    result_dict['data'] = statistic_result
+    raise tornado.gen.Return(result_dict)

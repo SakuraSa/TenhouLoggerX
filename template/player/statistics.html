@@ -1,0 +1,49 @@
+{% extends "../base.html" %}
+{% block body %}
+<div class="container" style="margin: 60px auto 64px">
+
+  <div class="row" style="text-align: center;">
+    <h1>{{ u'%s 风格统计' % name }}</h1>
+  </div>
+
+  <div class="row" style="text-align: center;">
+    {% if results['ok'] %}
+    {% module highCharts(options=options) %}
+    {% else %}
+    <p class="text-danger">{{ results['error'] }}</p>
+    {% end %}
+  </div>
+
+  <div class="row" style="text-align: center;">
+    <div class="row">
+      <div class="col-md-2"><strong>类别</strong></div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-2"><strong>数据</strong></div>
+          <div class="col-md-3"><strong>玩家数值</strong></div>
+          <div class="col-md-3"><strong>平均数值</strong></div>
+          <div class="col-md-4"><strong>说明</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2"><strong>攻</strong></div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-2"><strong>和了</strong></div>
+          <div class="col-md-3">{{ '%.2f%%' % (results['data']['win'] * 100) }}</div>
+          <div class="col-md-3">24.31%</div>
+          <div class="col-md-4">和了盘数除以总盘数</div>
+        </div>
+        <div class="row">
+          <div class="col-md-2"><strong>和了点</strong></div>
+          <div class="col-md-3">{{ '%d' % results['data']['win_point'] }}</div>
+          <div class="col-md-3">6553</div>
+          <div class="col-md-4">和了盘中得点点平均数</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% end %}
